@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String        @id @default(cuid())
+  name            String
+  email           String        @unique
+  passwordHash    String
+  role            String        @default("MEMBER")
+  pointBalance    Int           @default(1000)
+  createdAt       DateTime      @default(now())
+  markets         Market[]      @relation("CreatedMarkets")
+  approvedMarkets Market[]      @relation("ApprovedMarkets")
+  wagers          Wager[]
+  ledger          PointLedger[]
+}
+
+model Market {
+  id                String        @id @default(cuid())
+  title             String
+  description       String?
+  status            String        @default("PENDING")
+  rejectReason      String?
+  createdById       String
+  approvedById      String?
+  closesAt          DateTime?
+  resolvedOutcomeId String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  createdBy         User          @relation("CreatedMarkets", fields: [createdById], references: [id])
+  approvedBy        User?         @relation("ApprovedMarkets", fields: [approvedById], references: [id])
+  outcomes          Outcome[]
+  wagers            Wager[]
+  ledger            PointLedger[]
+  resolvedOutcome   Outcome?      @relation("ResolvedOutcome", fields: [resolvedOutcomeId], references: [id])
+}
+
+model Outcome {
+  id              String   @id @default(cuid())
+  marketId        String
+  label           String
+  market          Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  wagers          Wager[]
+  resolvedMarkets Market[] @relation("ResolvedOutcome")
+}
+
+model Wager {
+  id        String   @id @default(cuid())
+  userId    String
+  marketId  String
+  outcomeId String
+  amount    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  market    Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome   Outcome  @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([marketId])
+  @@index([userId])
+}
+
+model PointLedger {
+  id        String   @id @default(cuid())
+  userId    String
+  delta     Int
+  reason    String
+  marketId  String?
+  note      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  market    Market?  @relation(fields: [marketId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+}
