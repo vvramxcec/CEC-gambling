@@ -1,9 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getMarketOdds } from "@/lib/betting-service";
-import { Card, Badge, formatNumber } from "@/components/ui";
+import { Card, Badge, Button } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { Zap, TrendingUp, Clock, Users, ExternalLink, ArrowRight } from "lucide-react";
 
 interface LiveBetCardProps {
@@ -21,13 +20,12 @@ interface LiveBetCardProps {
     totalPool: number;
     outcomes: { outcomeId: string; label: string; sidePool: number; displayOdds: number | null }[];
   };
+  hoursLeft: number | null;
+  minutesLeft: number | null;
 }
 
-function LiveBetCard({ market, odds }: LiveBetCardProps) {
+function LiveBetCard({ market, odds, hoursLeft, minutesLeft }: LiveBetCardProps) {
   const isOpen = market.status === "OPEN";
-  const timeLeft = market.closesAt ? new Date(market.closesAt).getTime() - Date.now() : null;
-  const hoursLeft = timeLeft && timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60)) : null;
-  const minutesLeft = timeLeft && timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60)) : null;
 
   return (
     <Link href={`/markets/${market.id}`} className="group">
@@ -150,7 +148,15 @@ export async function LiveBetsSection() {
     })
   );
 
-  const openMarkets = marketsWithOdds.filter((m) => m.market.status === "OPEN");
+  const now = new Date().getTime();
+  const openMarketsWithTime = marketsWithOdds
+    .filter((m) => m.market.status === "OPEN")
+    .map(({ market, odds }) => {
+      const timeLeft = market.closesAt ? new Date(market.closesAt).getTime() - now : null;
+      const hoursLeft = timeLeft && timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60)) : null;
+      const minutesLeft = timeLeft && timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60)) : null;
+      return { market, odds, hoursLeft, minutesLeft };
+    });
   const lockedMarkets = marketsWithOdds.filter((m) => m.market.status === "LOCKED");
 
   return (
@@ -174,11 +180,11 @@ export async function LiveBetsSection() {
           </p>
         </div>
 
-        {openMarkets.length > 0 && (
+        {openMarketsWithTime.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display text-xl font-semibold text-[var(--color-cream)]">
-                Open for Betting ({openMarkets.length})
+                Open for Betting ({openMarketsWithTime.length})
               </h3>
               <Link
                 href="/dashboard"
@@ -189,8 +195,8 @@ export async function LiveBetsSection() {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {openMarkets.map(({ market, odds }) => (
-                <LiveBetCard key={market.id} market={market} odds={odds} />
+              {openMarketsWithTime.map(({ market, odds, hoursLeft, minutesLeft }) => (
+                <LiveBetCard key={market.id} market={market} odds={odds} hoursLeft={hoursLeft} minutesLeft={minutesLeft} />
               ))}
             </div>
           </div>
@@ -203,13 +209,13 @@ export async function LiveBetsSection() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {lockedMarkets.map(({ market, odds }) => (
-                <LiveBetCard key={market.id} market={market} odds={odds} />
+                <LiveBetCard key={market.id} market={market} odds={odds} hoursLeft={null} minutesLeft={null} />
               ))}
             </div>
           </div>
         )}
 
-        {(openMarkets.length === 0 && lockedMarkets.length === 0) && (
+        {(openMarketsWithTime.length === 0 && lockedMarkets.length === 0) && (
           <Card variant="glass" padding="xl" className="text-center max-w-xl mx-auto">
             <Zap className="w-16 h-16 mx-auto text-[var(--color-muted)]/50 mb-4" />
             <h3 className="font-display text-xl font-semibold text-[var(--color-cream)] mb-2">No Live Markets</h3>

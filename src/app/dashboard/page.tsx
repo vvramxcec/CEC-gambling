@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AppLayout } from "@/components/app-layout";
-import { Badge, Card, PageShell, formatNumber } from "@/components/ui";
+import { Badge, Card, PageShell } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { getLeaderboard } from "@/lib/betting-service";
 import { getMarketOdds } from "@/lib/betting-service";

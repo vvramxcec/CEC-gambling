@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { db } from "@/lib/db";
 import { getLeaderboard } from "@/lib/betting-service";
-import { Card, Badge, formatNumber } from "@/components/ui";
+import { Card, Badge } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { Trophy, Flame, TrendingUp, Crown, Medal, ArrowRight } from "lucide-react";
 
 interface LeaderboardEntry {

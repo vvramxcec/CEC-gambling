@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, Badge, formatNumber } from "@/components/ui";
+import { Card, Badge } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { Skull, Flame, TrendingDown, AlertTriangle, Crown, Zap } from "lucide-react";
 
 const disasters = [

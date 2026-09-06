@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Card, Badge } from "@/components/ui";
+import { Card, Badge, Button } from "@/components/ui";
 import { Target, Users, Zap, Calculator, Clock, Trophy, ArrowRight, CheckCircle } from "lucide-react";
 
 const steps = [
@@ -160,7 +160,7 @@ export function HowItWorks() {
           <div className="text-center mb-8">
             <Badge variant="gold" size="lg" className="mb-3">
               <Calculator className="w-4 h-4 mr-2" />
-              The Math (It's Beautiful)
+              The Math (It&apos;s Beautiful)
             </Badge>
             <h3 className="font-display text-2xl font-bold text-[var(--color-cream)]">
               Pari-Mutuel Formula

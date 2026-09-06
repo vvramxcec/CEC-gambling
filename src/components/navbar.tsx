@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { logout } from "@/lib/actions";
-import { Button, formatNumber } from "@/components/ui";
-import { Users, Trophy, Settings, LogOut, Menu, X, Star, Zap } from "lucide-react";
+import { Button } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
+import { Trophy, Settings, LogOut, Menu, X, Star, Zap } from "lucide-react";
 
 interface NavbarProps {
   user?: {
     id: string;
-    name: string;
+    name: string | null | undefined;
     pointBalance: number;
     role: string;
   } | null;

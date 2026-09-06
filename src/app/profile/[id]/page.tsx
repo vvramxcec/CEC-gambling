@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppLayout } from "@/components/app-layout";
-import { Badge, Card, PageShell, formatNumber, statusTone } from "@/components/ui";
+import { Badge, Card, PageShell, statusTone } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { TrendingUp, Trophy, Zap, Clock, ArrowRight, Medal } from "lucide-react";
 

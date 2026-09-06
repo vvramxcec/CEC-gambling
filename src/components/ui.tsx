@@ -7,11 +7,12 @@ export interface CardProps {
   children: ReactNode;
   className?: string;
   variant?: "default" | "elevated" | "glass" | "gradient";
-  padding?: "none" | "sm" | "md" | "lg";
+  padding?: "none" | "sm" | "md" | "lg" | "xl";
+  style?: React.CSSProperties;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ children, className = "", variant = "default", padding = "md", ...props }, ref) => {
+  ({ children, className = "", variant = "default", padding = "md", style, ...props }, ref) => {
     const variants = {
       default: "card-base",
       elevated: "card-base shadow-[var(--shadow-elevated)]",
@@ -24,12 +25,14 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       sm: "p-4",
       md: "p-6",
       lg: "p-8",
+      xl: "p-12",
     };
 
     return (
       <div
         ref={ref}
         className={`${variants[variant]} ${paddings[padding]} ${className}`}
+        style={style}
         {...props}
       >
         {children}
@@ -44,7 +47,7 @@ export interface BadgeProps {
   children: ReactNode;
   variant?: "gold" | "crimson" | "emerald" | "muted" | "success" | "warning" | "danger";
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xs";
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
@@ -60,6 +63,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     };
 
     const sizes = {
+      xs: "px-2 py-0.5 text-[10px]",
       sm: "px-2.5 py-1 text-xs",
       md: "px-3 py-1.5 text-xs",
       lg: "px-4 py-2 text-sm",
@@ -248,10 +252,11 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   helperText?: string;
   options: { value: string; label: string }[];
   placeholder?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, helperText, options, placeholder, className = "", id, ...props }, ref) => {
+  ({ label, error, helperText, options, placeholder, className = "", id, onValueChange, ...props }, ref) => {
     const generatedId = useId();
     const selectId = id || `select-${generatedId}`;
     const errorId = error ? `${selectId}-error` : undefined;
@@ -271,6 +276,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className={`input-base appearance-none pr-10 ${error ? "border-[var(--color-crimson)]" : ""} ${className}`}
             aria-invalid={error ? "true" : "false"}
             aria-describedby={error ? errorId : helperId}
+            onChange={(e) => onValueChange?.(e.target.value)}
             {...props}
           >
             {placeholder && (
@@ -483,10 +489,3 @@ export function statusTone(
   }
 }
 
-export function formatNumber(num: number): string {
-  return new Intl.NumberFormat().format(num);
-}
-
-export function formatCurrency(num: number): string {
-  return `${formatNumber(num)} pts`;
-}

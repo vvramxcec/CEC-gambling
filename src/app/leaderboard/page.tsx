@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AppLayout } from "@/components/app-layout";
-import { Card, Badge, formatNumber, PageShell } from "@/components/ui";
+import { Card, Badge, PageShell } from "@/components/ui";
+import { formatNumber } from "@/lib/utils";
 import { getLeaderboard } from "@/lib/betting-service";
 import { Trophy, Flame, TrendingUp, Crown, Medal, Users, Zap, Target, ArrowRight } from "lucide-react";
 

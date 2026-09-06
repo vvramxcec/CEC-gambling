@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button, Card, Badge, Select, Input } from "@/components/ui";
-import { CheckCircle, XCircle, Lock, Gavel, Check, X, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Lock, Gavel, Check, X, Loader2, AlertCircle } from "lucide-react";
 
 type AdminMarketCardProps = {
   market: {
@@ -172,14 +172,9 @@ export function AdminMarketCard({ market }: AdminMarketCardProps) {
               <Select
                 value={selectedOutcome}
                 onValueChange={setSelectedOutcome}
+                options={market.outcomes.map((outcome) => ({ value: outcome.id, label: `Winner: ${outcome.label}` }))}
                 className="w-full"
-              >
-                {market.outcomes.map((outcome) => (
-                  <option key={outcome.id} value={outcome.id}>
-                    Winner: {outcome.label}
-                  </option>
-                ))}
-              </Select>
+              />
 
               <Button
                 disabled={loading !== null || !selectedOutcome}

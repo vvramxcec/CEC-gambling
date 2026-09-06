@@ -73,7 +73,7 @@ export function SuggestBetForm() {
             <CheckCircle className="w-6 h-6 text-[var(--color-emerald)] flex-shrink-0" />
             <div>
               <p className="font-medium text-[var(--color-emerald)]">Submitted for approval!</p>
-              <p className="text-sm text-[var(--color-muted)]">An admin will review your bet. You'll see it on the dashboard once approved.</p>
+              <p className="text-sm text-[var(--color-muted)]">An admin will review your bet. You&apos;ll see it on the dashboard once approved.</p>
             </div>
           </div>
         </Card>
@@ -121,7 +121,7 @@ export function SuggestBetForm() {
                   value={outcome}
                   onChange={(event) => updateOutcome(index, event.target.value)}
                   required
-                  placeholder={index === 0 ? &ldquo;Yes, before 9:00&rdquo; : index === 1 ? &ldquo;No, late as usual&rdquo; : `Outcome ${index + 1}`}
+                  placeholder={index === 0 ? "&ldquo;Yes, before 9:00&rdquo;" : index === 1 ? "&ldquo;No, late as usual&rdquo;" : `Outcome ${index + 1}`}
                   className="flex-1"
                 />
                 {outcomes.length > 2 && (

@@ -18,9 +18,16 @@ export async function AppLayout({
   if (!session?.user) redirect("/login");
   if (adminOnly && session.user.role !== "ADMIN") redirect("/dashboard");
 
+  const user = {
+    id: session.user.id,
+    name: session.user.name ?? "",
+    pointBalance: session.user.pointBalance,
+    role: session.user.role,
+  };
+
   return (
     <>
-      {showNavbar && <Navbar user={session.user} />}
+      {showNavbar && <Navbar user={user} />}
       <main className="flex-1 pt-16 min-h-screen">
         {children}
       </main>
@@ -30,9 +37,15 @@ export async function AppLayout({
 
 export async function LandingLayout({ children }: { children: ReactNode }) {
   const session = await auth();
+  const user = session?.user ? {
+    id: session.user.id,
+    name: session.user.name ?? "",
+    pointBalance: session.user.pointBalance,
+    role: session.user.role,
+  } : null;
   return (
     <>
-      <Navbar user={session?.user ?? null} isLandingPage={true} />
+      <Navbar user={user} isLandingPage={true} />
       <main className="min-h-screen">{children}</main>
     </>
   );
